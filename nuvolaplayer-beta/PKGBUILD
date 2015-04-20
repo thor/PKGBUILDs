@@ -1,0 +1,42 @@
+# Maintainer: Alex Jordan <alexander3223098@gmail.com>
+
+# Based off the nuvolaplayer PKGBUILD in the AUR, which uses work from the following people. This one is only slightly modified.
+
+# Original Contributor: Ray Rashif <schivmeister@gmail.com>
+# Original Contributor: Alexandr Grigorcea <cahr.gr@gmail.com>
+ 
+# not a makepkg variable
+_tarball_extract_name="nuvolaplayer-2.1~r736.beta1"
+
+pkgname=nuvolaplayer-beta
+pkgver=2.1_beta1
+pkgrel=2
+pkgdesc="Integrated Google Music, Grooveshark, 8tracks and Hype Machine player (beta version)."
+arch=(i686 x86_64)
+url=http://nuvolaplayer.fenryxo.cz
+license=('GPL3')
+depends=('json-glib' 'intltool' 'gtk3' 'webkitgtk3' 'python2' 'libnotify' 'libx11' 'libunique' 'libgee06' 'libsoup' 'gst-plugins-base' 'gst-plugins-good' 'gst-plugins-ugly')
+makedepends=('vala' 'scour')
+provides=('nuvola' 'nuvolaplayer')
+conflicts=('google-musc-frame-bzr' 'nuvolaplayer')
+optdepends=('gnome-shell-extension-mediaplayer-git: Gnome Shell integration' 'tsocks: Socks proxy support')
+replaces=('google-music-frame-bzr' 'nuvola-bzr' 'nuvola-bzr-stable')
+options=()
+source=(https://launchpad.net/nuvola-player/2.1.x/${pkgver//_/-}/+download/${_tarball_extract_name}.tar.gz)
+md5sums=(3e4f623977699a4a27353ecc2131d7e7)
+install=nuvola.install
+ 
+build() {
+  cd "${srcdir}/${_tarball_extract_name}"
+  LDFLAGS="$LDFLAGS -ldl"
+
+  python2 ./waf configure --prefix=/usr --no-unity-quick-list
+  sed -i "s/ctx.env.SCOUR/'python2  \/usr\/bin\/scour'/" wscript
+  python2 ./waf build $MAKEFLAGS || return 1
+}
+
+package() {
+  cd "${srcdir}/${_tarball_extract_name}"
+
+  python2 ./waf install --destdir="${pkgdir}"
+}
