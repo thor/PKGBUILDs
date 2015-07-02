@@ -1,0 +1,39 @@
+# Maintainer: Thor K. H. <thor alfakrøll roht dott no>
+# Contributor: Tim Besard <tim $dot$ besard $at$ gmail $dot$ com>
+# Contributor: Jelle van der Waa <jellevdwaa @ gmail.com>
+# Contributor: Pieter Kokx <pieter $at$ kokx $dot$ .nl>
+
+pkgname=whatpulse
+pkgver=2.6.2
+pkgrel=1
+pkgdesc="Measures your keyboard, mouse and application usage, network traffic and uptime."
+arch=('i686' 'x86_64')
+url=http://www.whatpulse.org
+license=(custom:whatpulse_tos)
+install="$pkgname.install"
+depends=(qt4)
+optdepends=(
+    'systray: any systray, like gnome-panel'
+    'libpcap: for capturing network statistics'
+)
+source=('whatpulse.desktop')
+sha256sums=('9ad42960f0a8b538f1d98fea1ced9b2a97ef59aadca50d0382efdb71434572b7')
+source_i686=("http://www.whatpulse.org/files/whatpulse-linux-32bit-$pkgver.tar.gz")
+sha256sums_i686=('249975a06e9dee515df0415d35bbaa02dcc6481ec11ad2d91fbabcbb213c8602')
+source_x86_64=("http://www.whatpulse.org/files/whatpulse-linux-64bit-$pkgver.tar.gz")
+sha256sums_x86_64=('d84cf61827c41929980147ea7e3ecfa799bf3aae904bc3b930c843c02ef58773')
+
+package() {
+    cd $srcdir/
+    # Install the binary
+    mkdir -p ${pkgdir}/usr/bin
+    install -m0755 whatpulse ${pkgdir}/usr/bin/
+    # Install the freedesktop shortcut
+    mkdir -p ${pkgdir}/usr/share/applications
+    install -m0644 whatpulse.desktop ${pkgdir}/usr/share/applications/
+    
+    mkdir -p ${pkgdir}/etc/udev/rules.d/
+    cat >${pkgdir}/etc/udev/rules.d/99-whatpulse-input.rules <<__EOF__
+KERNEL=="event*", NAME="input/%k", MODE="640", GROUP="input"
+__EOF__
+}
