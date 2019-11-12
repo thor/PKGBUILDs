@@ -1,3 +1,4 @@
+# Contributor: Thor K. Høgås <thor at roht.no>
 # Maintainer: Alex J. Malozemoff <amaloz@galois.com>
 pkgname=matterhorn
 pkgver=50200.5.0
