@@ -1,19 +1,22 @@
-# Maintainer:  Christoph Mohr <christoph.mohr@gmail.com>
-# Contributor:  Giovanni 'ItachiSan' Santini <giovannisantini93@yahoo.it>
+# Maintainer: Christoph Mohr <christoph.mohr@gmail.com>
+# Contributor: Giovanni 'ItachiSan' Santini <giovannisantini93@yahoo.it>
 # Contributor: Filipe Laíns (FFY00) <lains@archlinux.org>
 # Contributor: Pieter Goetschalckx <3.14.e.ter <at> gmail <dot> com>
-
-pkgname=ferdi-git
+# Contributor: Thor K. Høgås <thor at roht dot no>
+_pkgname=ferdi
+pkgname=${_pkgname}-git
 _pkgver=5.4.0
 pkgver=${_pkgver//-/_}
-pkgrel=1
+pkgrel=2
 pkgdesc='Ferdi is a messaging browser that allows you to combine your favorite messaging services into one application.'
 arch=(x86_64 i686)
 url='https://getferdi.com/'
 license=(Apache)
 conflicts=('ferdi')
 depends=(electron)
-makedepends=(expac git npm python2)
+# node-gyp may require libxkbfile (XKBrules.h) for keyboard-layout-manager
+# node-gyp may require python3 for sqlite3
+makedepends=('expac' 'git' 'npm' 'python2' 'libxkbfile' 'python')
 source=('git://github.com/getferdi/ferdi.git'
         'git://github.com/getferdi/recipes.git'
         'ferdi.desktop'
@@ -22,6 +25,15 @@ sha512sums=('SKIP'
             'SKIP'
             '501ff4d6c653823bf3321500bf7b1a4e3fa412e30c9884f6860656f816ca90c3f37610435d591c4b9444b491e7f8fe0c0dcad33be97c345ffccf46fd30e1eb65'
             '6313c50e4226a144303c5a0055f08312009ea14e45de227c163aaeb528a49c796704bbd3b8cfa2cce49840e54dbd5e25cf8a241e619f2bf9b1a4ff79b80b78eb')
+
+pkgver() {
+  cd "$_pkgname"
+  ( set -o pipefail
+    git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  )
+}
+
 
 prepare() {
   # Prepare Python 2 for later
@@ -44,7 +56,12 @@ prepare() {
     src/index.js
 
   # Adjust node-sass version to avoid build issues
-  npm install "node-sass@4.12.0"
+  # Adjust electron-spellchecker to avoid build issues
+  npm install \
+	"node-sass@4.13.0" \
+	"electron-spellchecker@2.2.1" \
+	--save-prod
+
 }
 
 build() {
@@ -54,7 +71,6 @@ build() {
   export npm_config_cache="$srcdir"/npm_cache
   export PATH="$srcdir/ferdi/node_modules/.bin:$srcdir/python2_path:$PATH"
 
-  npm install lerna
   lerna bootstrap
 
   gulp build
