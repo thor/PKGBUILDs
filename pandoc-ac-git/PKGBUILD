@@ -1,8 +1,8 @@
 # Maintainer: Thor K. Høgås <thor@roht.no>
 pkgname=pandoc-ac-git
 _pkgname=pandoc-ac
-pkgver=0.2.0.r5.56a3957
-pkgrel=2
+pkgver=0.2.0.r6.e3ac390
+pkgrel=1
 pkgdesc="Simple Pandoc filter for a clean syntax to LaTeX acronyms"
 arch=('x86_64')
 url="https://github.com/thor/pandoc-ac"
