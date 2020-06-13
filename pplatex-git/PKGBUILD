@@ -2,14 +2,14 @@
 _pkgname=pplatex
 pkgname=$_pkgname-git
 pkgver=20150915.g5cec891
-pkgrel=2
+pkgrel=3
 pkgdesc="Pretty-Print LaTeX: A tool to reformat the output of latex and friends into readable messages"
 arch=('i686' 'x86_64')
-url="https://github.com/stefanhepp/pplatex"
+url="https://github.com/neingeist/pplatex"
 license=('GPL3')
 depends=('pcre' 'texlive-bin')
 makedepends=('git' 'scons')
-source=("git+https://github.com/stefanhepp/$_pkgname.git")
+source=("git+https://github.com/neingeist/$_pkgname.git")
 md5sums=('SKIP')
 
 pkgver() {
