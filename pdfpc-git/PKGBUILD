@@ -1,0 +1,36 @@
+# Maintainer: Jiachen Yang <farseerfc@archlinux.org>
+# Contributor: Andreas Bilke <andreas@bilke>
+
+pkgname=pdfpc-git
+pkgver=r1135.11719ed
+pkgrel=1
+pkgdesc='A presenter console with multi-monitor support for PDF files'
+arch=('x86_64')
+url='https://pdfpc.github.io/'
+license=('GPL')
+depends=('gtk3' 'poppler-glib' 'libgee' 'gstreamer' 'gst-plugins-base' 'webkit2gtk' 'discount')
+optdepends=('gst-plugin-gtk: for video playback'
+            'gst-plugins-good: more codecs for video playback support'
+            'gst-libav: more codecs for video playback support')
+makedepends=('cmake' 'vala' 'git')
+source=("$pkgname::git+https://github.com/pdfpc/pdfpc.git")
+
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "$srcdir/$pkgname"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+    cd "$srcdir/$pkgname"
+    cmake  -DCMAKE_INSTALL_PREFIX="/usr/" -DSYSCONFDIR="/etc" .
+    make
+}
+
+package() {
+    cd "$srcdir/$pkgname"
+    make DESTDIR="$pkgdir/" install
+}
+
+# vim:set ts=4 sw=4 et:

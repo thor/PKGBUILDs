@@ -1,0 +1,25 @@
+pkgbase = pdfpc-git
+	pkgdesc = A presenter console with multi-monitor support for PDF files
+	pkgver = r1135.11719ed
+	pkgrel = 1
+	url = https://pdfpc.github.io/
+	arch = x86_64
+	license = GPL
+	makedepends = cmake
+	makedepends = vala
+	makedepends = git
+	depends = gtk3
+	depends = poppler-glib
+	depends = libgee
+	depends = gstreamer
+	depends = gst-plugins-base
+	depends = webkit2gtk
+	depends = discount
+	optdepends = gst-plugin-gtk: for video playback
+	optdepends = gst-plugins-good: more codecs for video playback support
+	optdepends = gst-libav: more codecs for video playback support
+	source = pdfpc-git::git+https://github.com/pdfpc/pdfpc.git
+	sha256sums = SKIP
+
+pkgname = pdfpc-git
+
